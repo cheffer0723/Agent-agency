@@ -7,5 +7,8 @@ example_agent2 = Agent(
     instructions="./instructions.md",
     tools_folder="./tools",
     files_folder="./files",
+    # Route to Anthropic Claude via LiteLLM. The SDK's MultiProvider resolves the
+    # "litellm/" prefix and LiteLLM reads ANTHROPIC_API_KEY from the environment.
+    model="litellm/anthropic/claude-sonnet-4-5-20250929",
 )
 
