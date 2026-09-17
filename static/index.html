@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Desk — Chief of Staff Agency</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1a1f1c;
+      --mute: #5c675f;
+      --paper: #e8ebe4;
+      --paper-2: #dfe4d8;
+      --panel: rgba(250, 251, 247, 0.82);
+      --line: rgba(26, 31, 28, 0.12);
+      --accent: #0f6b4c;
+      --accent-2: #c45c26;
+      --user: #1a1f1c;
+      --bot: #f7f8f3;
+      --danger: #9b2c2c;
+      --shadow: 0 18px 50px rgba(26, 31, 28, 0.08);
+      --radius: 18px;
+      --font-display: "Fraunces", Georgia, serif;
+      --font-body: "IBM Plex Sans", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-body);
+      background:
+        radial-gradient(1200px 700px at 12% -10%, rgba(15, 107, 76, 0.16), transparent 55%),
+        radial-gradient(900px 600px at 100% 0%, rgba(196, 92, 38, 0.12), transparent 50%),
+        linear-gradient(165deg, #f3f5ef 0%, var(--paper) 45%, var(--paper-2) 100%);
+      background-attachment: fixed;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.35;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+      mix-blend-mode: multiply;
+    }
+
+    .shell {
+      min-height: 100%;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 28px 20px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header.hero {
+      padding: 8px 4px 22px;
+      animation: rise 0.7s ease both;
+    }
+
+    .brand {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(2.6rem, 7vw, 4.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      margin: 0 0 10px;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .lede {
+      margin: 0;
+      max-width: 34rem;
+      color: var(--mute);
+      font-size: 1.05rem;
+      line-height: 1.45;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+      align-items: center;
+    }
+
+    .mode {
+      display: inline-flex;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(8px);
+    }
+
+    .mode button {
+      border: 0;
+      background: transparent;
+      color: var(--mute);
+      font: inherit;
+      font-weight: 500;
+      font-size: 0.92rem;
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+    }
+
+    .mode button[aria-pressed="true"] {
+      background: var(--ink);
+      color: #f7f8f3;
+    }
+
+    .mode button:hover { transform: translateY(-1px); }
+
+    .token-wrap {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-left: auto;
+    }
+
+    .token-wrap input {
+      width: min(220px, 42vw);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.7);
+      border-radius: 12px;
+      padding: 9px 12px;
+      font: inherit;
+      color: var(--ink);
+    }
+
+    .token-wrap input:focus {
+      outline: 2px solid rgba(15, 107, 76, 0.35);
+      outline-offset: 1px;
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: var(--mute);
+    }
+
+    main.stage {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      min-height: min(70vh, 720px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      overflow: hidden;
+      animation: rise 0.85s 0.08s ease both;
+    }
+
+    #log {
+      overflow-y: auto;
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .msg {
+      max-width: min(78%, 640px);
+      padding: 12px 14px;
+      border-radius: 16px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
+      animation: pop 0.28s ease both;
+    }
+
+    .msg.user {
+      align-self: flex-end;
+      background: var(--user);
+      color: #f4f6f1;
+      border-bottom-right-radius: 6px;
+    }
+
+    .msg.bot {
+      align-self: flex-start;
+      background: var(--bot);
+      border: 1px solid var(--line);
+      border-bottom-left-radius: 6px;
+    }
+
+    .msg.system {
+      align-self: center;
+      background: transparent;
+      color: var(--mute);
+      font-size: 0.9rem;
+      text-align: center;
+      max-width: 90%;
+    }
+
+    .msg.error {
+      align-self: center;
+      color: var(--danger);
+      background: rgba(155, 44, 44, 0.08);
+      border: 1px solid rgba(155, 44, 44, 0.2);
+    }
+
+    .composer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 14px;
+      border-top: 1px solid var(--line);
+      background: rgba(255,255,255,0.55);
+    }
+
+    #input {
+      resize: none;
+      min-height: 52px;
+      max-height: 160px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 14px;
+      font: inherit;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    #input:focus {
+      outline: 2px solid rgba(15, 107, 76, 0.35);
+      outline-offset: 1px;
+    }
+
+    #send {
+      border: 0;
+      border-radius: 14px;
+      padding: 0 18px;
+      font: inherit;
+      font-weight: 600;
+      background: var(--accent);
+      color: #f4faf7;
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
+    }
+
+    #send:hover { filter: brightness(1.05); transform: translateY(-1px); }
+    #send:disabled { opacity: 0.55; cursor: wait; transform: none; }
+
+    footer.meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 6px 0;
+      color: var(--mute);
+      font-size: 0.8rem;
+      animation: rise 1s 0.12s ease both;
+    }
+
+    footer.meta a { color: var(--accent-2); }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    @keyframes pop {
+      from { opacity: 0; transform: translateY(6px) scale(0.98); }
+      to { opacity: 1; transform: none; }
+    }
+
+    @media (max-width: 640px) {
+      .token-wrap { margin-left: 0; width: 100%; }
+      .token-wrap input { width: 100%; }
+      .msg { max-width: 92%; }
+      .shell { padding: 18px 14px 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="hero">
+      <h1 class="brand">Desk<span>.</span></h1>
+      <p class="lede">Talk to your agency. Founder mode cuts scope and ships. Tester mode answers Asymmetry beta questions honestly.</p>
+      <div class="controls">
+        <div class="mode" role="group" aria-label="Agent mode">
+          <button type="button" id="mode-founder" aria-pressed="true">Founder</button>
+          <button type="button" id="mode-tester" aria-pressed="false">Tester</button>
+        </div>
+        <div class="token-wrap">
+          <input id="token" type="password" placeholder="APP_TOKEN (if set)" autocomplete="off" />
+          <span class="hint" id="mode-hint">Chief of Staff</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="stage" aria-label="Chat">
+      <div id="log" role="log" aria-live="polite"></div>
+      <form class="composer" id="form">
+        <textarea id="input" rows="2" placeholder="What should we cut to ship beta?" required></textarea>
+        <button id="send" type="submit">Send</button>
+      </form>
+    </main>
+
+    <footer class="meta">
+      <span>Agency Swarm · Railway</span>
+      <a href="/docs" target="_blank" rel="noreferrer">API docs</a>
+    </footer>
+  </div>
+
+  <script>
+    const AGENTS = {
+      founder: {
+        id: "ChiefOfStaff",
+        label: "Chief of Staff",
+        placeholder: "What should we cut to ship beta?",
+        hello: "Founder mode. Dump the backlog — I'll force rank, cut scope, and give you three next actions.",
+      },
+      tester: {
+        id: "BetaSupport",
+        label: "Beta Support",
+        placeholder: "Ask about Asymmetry, status, or report a bug…",
+        hello: "Tester mode. Ask about Asymmetry, check if it's up, or report a bug. I won't invent answers.",
+      },
+    };
+
+    const logEl = document.getElementById("log");
+    const form = document.getElementById("form");
+    const input = document.getElementById("input");
+    const send = document.getElementById("send");
+    const tokenInput = document.getElementById("token");
+    const modeHint = document.getElementById("mode-hint");
+    const btnFounder = document.getElementById("mode-founder");
+    const btnTester = document.getElementById("mode-tester");
+
+    let mode = localStorage.getItem("desk_mode") || "founder";
+    let chatHistory = [];
+    tokenInput.value = localStorage.getItem("desk_app_token") || "";
+
+    function setMode(next) {
+      mode = next;
+      localStorage.setItem("desk_mode", mode);
+      btnFounder.setAttribute("aria-pressed", mode === "founder" ? "true" : "false");
+      btnTester.setAttribute("aria-pressed", mode === "tester" ? "true" : "false");
+      const cfg = AGENTS[mode];
+      modeHint.textContent = cfg.label;
+      input.placeholder = cfg.placeholder;
+      chatHistory = [];
+      logEl.innerHTML = "";
+      addMsg(cfg.hello, "system");
+    }
+
+    function addMsg(text, kind) {
+      const el = document.createElement("div");
+      el.className = "msg " + kind;
+      el.textContent = text;
+      logEl.appendChild(el);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    btnFounder.addEventListener("click", () => setMode("founder"));
+    btnTester.addEventListener("click", () => setMode("tester"));
+    tokenInput.addEventListener("change", () => {
+      localStorage.setItem("desk_app_token", tokenInput.value.trim());
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const message = input.value.trim();
+      if (!message) return;
+
+      addMsg(message, "user");
+      input.value = "";
+      send.disabled = true;
+
+      const headers = { "Content-Type": "application/json" };
+      const token = tokenInput.value.trim();
+      if (token) headers["Authorization"] = "Bearer " + token;
+
+      const body = {
+        message,
+        recipient_agent: AGENTS[mode].id,
+      };
+      if (chatHistory.length) body.chat_history = chatHistory;
+
+      try {
+        const res = await fetch("/my-agency/get_response", {
+          method: "POST",
+          headers,
+          body: JSON.stringify(body),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          const detail = typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail || data);
+          addMsg(detail || ("Request failed (" + res.status + ")"), "error");
+          return;
+        }
+        const reply = data.response || "(empty response)";
+        addMsg(reply, "bot");
+        if (Array.isArray(data.new_messages)) {
+          chatHistory = chatHistory.concat(data.new_messages);
+        }
+      } catch (err) {
+        addMsg(String(err.message || err), "error");
+      } finally {
+        send.disabled = false;
+        input.focus();
+      }
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        form.requestSubmit();
+      }
+    });
+
+    setMode(mode);
+    input.focus();
+  </script>
+</body>
+</html>
