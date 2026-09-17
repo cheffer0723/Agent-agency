@@ -2,7 +2,7 @@ from agency_swarm import Agent
 
 # Anthropic Claude via LiteLLM. The Agents SDK MultiProvider resolves the
 # "litellm/" prefix and LiteLLM reads ANTHROPIC_API_KEY from the environment.
-MODEL = "litellm/anthropic/claude-sonnet-4-5-20250929"
+MODEL = "litellm/anthropic/claude-haiku-4-5-20251001"
 
 beta_support = Agent(
     name="BetaSupport",
