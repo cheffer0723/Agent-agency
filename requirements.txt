@@ -1,3 +1,5 @@
 agency-swarm[fastapi]>=1.9.1
 fastapi
 uvicorn
+python-dotenv
+litellm
