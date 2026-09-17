@@ -2,7 +2,8 @@ FROM python:3.13-slim
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PATH="/root/.local/bin:${PATH}"
+    PATH="/root/.local/bin:${PATH}" \
+    PORT=8080
 
 WORKDIR /app
 
@@ -12,7 +13,6 @@ RUN pip install --upgrade pip && \
 
 COPY . .
 
-# update as necessary in accordance with the security policy
-USER root 
+EXPOSE 8080
 
-CMD python -u main.py
+CMD ["python", "-u", "main.py"]
